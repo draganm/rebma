@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 )
 
 // incompressible returns n deterministic pseudo-random bytes (zstd cannot shrink them).
@@ -183,7 +183,7 @@ func TestParseRecordRejectsCorruption(t *testing.T) {
 		// keys (callers supply canonical keys), ParseRecord must.
 		var k key.Key
 		copy(k[:], o.Key[:])
-		k[0] = 0xF0 // type 15: reserved
+		k[31] = 0xF0 // type 15: reserved
 		bad, err := EncodeRecord(k, o.Bytes)
 		if err != nil {
 			t.Fatal(err)

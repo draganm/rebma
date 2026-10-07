@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/amber-store/core/gc"
-	"github.com/amber-store/core/packstore"
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/gc"
+	"github.com/draganm/rebma/packstore"
+	"github.com/draganm/rebma/refstore"
 	"github.com/urfave/cli/v2"
 )
 

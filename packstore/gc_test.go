@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 // gcStore returns an open store with objs sealed into segments of 8 KiB.

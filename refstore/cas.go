@@ -7,9 +7,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/reference"
-	"github.com/amber-store/core/refstore/internal/refsdb"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/reference"
+	"github.com/draganm/rebma/refstore/internal/refsdb"
 )
 
 // ErrConflict is returned by the optimistic writes when the reference is not

@@ -6,9 +6,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/reference"
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/reference"
+	"github.com/draganm/rebma/refstore"
 )
 
 // blobKey is the key of a Blob holding s.

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/amber-store/core/gc"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/reference"
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/gc"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/reference"
+	"github.com/draganm/rebma/refstore"
 	"github.com/urfave/cli/v2"
 )
 

@@ -6,8 +6,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 // mkObj builds a canonical Blob object from data (Blob length == byte length).
@@ -195,7 +195,7 @@ func TestReader_NonCanonicalKeyRejected(t *testing.T) {
 	o := mkObj(t, []byte("payload"))
 	var k key.Key
 	copy(k[:], o.Key[:])
-	k[0] = 0xF0 // reserved type nibble -> key.Parse fails
+	k[31] = 0xF0 // reserved type nibble -> key.Parse fails
 	rec, err := EncodeRecord(k, o.Bytes)
 	if err != nil {
 		t.Fatal(err)

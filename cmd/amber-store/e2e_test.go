@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/packstore"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/packstore"
 )
 
 // runApp runs the CLI with args (without the leading program name) and

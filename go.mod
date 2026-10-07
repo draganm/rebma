@@ -1,4 +1,4 @@
-module github.com/amber-store/core
+module github.com/draganm/rebma
 
 go 1.26.3
 

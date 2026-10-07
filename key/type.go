@@ -1,12 +1,14 @@
-// Package key implements the 32-byte Amber-Store lookup key: a content address
-// that encodes a CAS object type, a logical payload length, and a truncated
-// BLAKE3 hash of the payload's serialized bytes. See architecture/keys.md.
+// Package key implements the 32-byte lookup key: a content address that
+// encodes a CAS object type, a logical payload length, and a truncated BLAKE3
+// hash of the payload's serialized bytes. It is the Amber-Store key with its
+// bytes reversed, so the hash comes first and the header byte last. See
+// architecture/keys.md.
 package key
 
 import "fmt"
 
 // Type is the 4-bit CAS object type carried in the high nibble of a key's
-// header byte (architecture/types.md).
+// header byte, the key's last byte (architecture/types.md).
 type Type uint8
 
 const (

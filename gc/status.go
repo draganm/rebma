@@ -6,9 +6,9 @@ import (
 	"slices"
 	"time"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/reference"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/reference"
 )
 
 // PackStatus is one sealed pack's score against a mark.

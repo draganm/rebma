@@ -8,7 +8,7 @@ import (
 	"slices"
 	"sort"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 )
 
 // DefaultDirectoryReaderCapacity is the capacity of a DirectoryReader made

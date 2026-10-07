@@ -48,14 +48,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/amber-store/core/chunkers"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/gc"
-	"github.com/amber-store/core/ingest"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/packstore"
-	"github.com/amber-store/core/reference"
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/chunkers"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/gc"
+	"github.com/draganm/rebma/ingest"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/packstore"
+	"github.com/draganm/rebma/reference"
+	"github.com/draganm/rebma/refstore"
 	"golang.org/x/sys/unix"
 )
 

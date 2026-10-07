@@ -3,8 +3,8 @@ package packstore
 import (
 	"testing"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 // ownCopy reports whether the store's own active segment holds k.

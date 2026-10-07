@@ -3,7 +3,7 @@ package fstree
 import (
 	"fmt"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 	"github.com/fxamacker/cbor/v2"
 )
 

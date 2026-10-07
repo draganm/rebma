@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/amber-store/core/chunkers"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/chunkers"
+	"github.com/draganm/rebma/key"
 	"github.com/fxamacker/cbor/v2"
 )
 

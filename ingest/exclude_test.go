@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/amber-store/core/packstore"
+	"github.com/draganm/rebma/packstore"
 )
 
 // excludeFixture is a tree with a metadata dir at the root and a same-named

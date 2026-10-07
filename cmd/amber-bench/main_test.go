@@ -26,7 +26,7 @@ func TestSmoke(t *testing.T) {
 	}
 	dir := t.TempDir()
 	cli := filepath.Join(dir, "amber-store")
-	build := exec.Command(goBin, "build", "-o", cli, "github.com/amber-store/core/cmd/amber-store")
+	build := exec.Command(goBin, "build", "-o", cli, "github.com/draganm/rebma/cmd/amber-store")
 	if out, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("building the CLI: %v\n%s", err, out)
 	}

@@ -1,6 +1,6 @@
 package packstore
 
-import "github.com/amber-store/core/key"
+import "github.com/draganm/rebma/key"
 
 // BeginBarrier starts grey capture: keys a write observes are live for
 // the next Compact, letting ingests run concurrently with the caller's

@@ -3,7 +3,7 @@ package packstore
 import (
 	"slices"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 )
 
 // MarkSet is a liveness mark over a snapshot: one bit per sealed record,

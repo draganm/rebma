@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/refstore"
 )
 
 const (

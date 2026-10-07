@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/reference"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/reference"
 )
 
 // testKey returns a valid canonical key to point references at.
@@ -183,7 +183,7 @@ func TestDecodeRejectsGarbage(t *testing.T) {
 // goldenHex is the canonical CBOR encoding of Reference{Name:"n", Key:<EncodeBlob("hello")>, User:"u", CreatedAt:42}.
 // It pins the wire format so a CBOR library upgrade cannot silently change encodings that
 // signatures and persistence depend on.
-const goldenHex = "a400616e0158200005ea8f163db38682925e4491c5e58d4bb3506ef8c14eb78a86e908c5624a6702617503182a"
+const goldenHex = "a400616e015820674a62c508e9868ab74ec1f86e50b34b8de5c591445e928286b33d168fea050002617503182a"
 
 func TestGoldenVector(t *testing.T) {
 	r := reference.Reference{Name: "n", Key: testKey(t), User: "u", CreatedAt: 42}
@@ -200,7 +200,7 @@ func TestGoldenVector(t *testing.T) {
 func TestDecodeRejectsExtraMapKey(t *testing.T) {
 	// Golden bytes with map header changed from a4 (4 items) to a5 (5 items)
 	// and an extra key-value pair (09 = int 9, 61 78 = text "x") appended.
-	extra, _ := hex.DecodeString("a500616e0158200005ea8f163db38682925e4491c5e58d4bb3506ef8c14eb78a86e908c5624a6702617503182a096178")
+	extra, _ := hex.DecodeString("a500616e015820674a62c508e9868ab74ec1f86e50b34b8de5c591445e928286b33d168fea050002617503182a096178")
 	if _, err := reference.Decode(extra); err == nil {
 		t.Fatal("expected error for encoding with extra map key")
 	}
@@ -249,7 +249,7 @@ func TestEncodeRejectsTooLongUserAndSignature(t *testing.T) {
 func TestDecodeRejectsNonCanonicalEncoding(t *testing.T) {
 	// Golden bytes with the last two bytes (18 2a = uint 42) replaced by
 	// 19 00 2a (two-byte encoding of 42) — valid CBOR but not minimal.
-	nonCanon, _ := hex.DecodeString("a400616e0158200005ea8f163db38682925e4491c5e58d4bb3506ef8c14eb78a86e908c5624a670261750319002a")
+	nonCanon, _ := hex.DecodeString("a400616e015820674a62c508e9868ab74ec1f86e50b34b8de5c591445e928286b33d168fea05000261750319002a")
 	if _, err := reference.Decode(nonCanon); err == nil {
 		t.Fatal("expected error for non-canonical (non-minimal integer) encoding")
 	}

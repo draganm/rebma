@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 // TestReachableKeys walks a tree exercising every object type — a DirNode root,

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 // mapHas reports membership in an in-memory object set.

@@ -8,8 +8,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/amber-store/core/refstore"
 	"github.com/cockroachdb/pebble/v2"
+	"github.com/draganm/rebma/refstore"
 )
 
 type quietLogger struct{}

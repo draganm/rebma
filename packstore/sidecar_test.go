@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 )
 
 func scKey(t *testing.T, i int) key.Key {

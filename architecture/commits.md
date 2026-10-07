@@ -205,26 +205,26 @@ byte for byte.
 
 - `tree`: the empty directory, a `DirLeaf` whose body is the empty CBOR array
   `80` with length field 1 —
-  `2001bbe6a9f5a0146a1f4d0381e9b0ed1ac2f1a979ce9d5ad84e46ff0b58f36b`.
+  `6bf3580bff464ed85a9dce79a9f1c21aedb0e981034d1f6a14a0f5a9e6bb0120`.
 - Ann: name `Ann`, email `ann@example.com`, when `1700000000000000000`,
   tz_offset `120`. Bob: name `Bob`, empty email, when `1700000000000000001`,
   tz_offset `-300`.
 - Parent A: a root commit of `tree`, author and committer Ann, message `a`:
   115 bytes, length field 115 + 1 —
-  key `5074d980bd63330e7b37ddd0989bea896cd6a35988e973dfc4b1b28808930a7c`.
+  key `8f2a0d816398cc068c636a2859d576a0706ee8e33cd4673e14e81ac87de97450`.
 - Parent B: the same with message `b` —
-  key `5074c8825d499d27183b57319a8b637c7868ef9783da1d19369231d0bbe48831`.
+  key `68e165549a26b82280724ed57cdf1f8e7e2390a3b37a8ba9a17cd44becbc7450`.
 
 **The merge**: tree `tree`, parents `[A, B]`, author Ann, committer Bob,
 message `merge\n`. 174 bytes, length field 174 + 1 = 175 (`af`), key
-`50afd48693e2ae8418fb83d0459174df45ba5fdddef67376e74ac6893a5abbed`:
+`0bfeb34dc3a09fb16c88cd479a7f931a223b73f3836e81c0f9f601c720acaf50`:
 
 ```
 a5                                     ; map(5)
-  00 5820 2001bbe6a9f5a0146a1f4d0381e9b0ed1ac2f1a979ce9d5ad84e46ff0b58f36b   ; 0: tree
+  00 5820 6bf3580bff464ed85a9dce79a9f1c21aedb0e981034d1f6a14a0f5a9e6bb0120   ; 0: tree
   01 82                                ; 1: parents, array(2)
-     5820 5074d980bd63330e7b37ddd0989bea896cd6a35988e973dfc4b1b28808930a7c
-     5820 5074c8825d499d27183b57319a8b637c7868ef9783da1d19369231d0bbe48831
+     5820 8f2a0d816398cc068c636a2859d576a0706ee8e33cd4673e14e81ac87de97450
+     5820 68e165549a26b82280724ed57cdf1f8e7e2390a3b37a8ba9a17cd44becbc7450
   02 a4                                ; 2: author, map(4)
      00 63 416e6e                      ;    0: "Ann"
      01 6f 616e6e406578616d706c652e636f6d   ; 1: "ann@example.com"
@@ -244,14 +244,14 @@ bytes are all `22` (the codec fetches no tree, so fabricated keys serve);
 labels `ours`, the empty string, `theirs`; change id `00 01 … 0f`; parent A;
 author Ann; a committer **without a name**, email `bot@example.com`, at Bob's
 time and zone; message `conflict\n`. 258 bytes, length field
-258 + 1 + 300 + 70000 = 70559 (`01139f`), key
-`5201139f190aa234ad713392987671d47e7e3292a613c62e3d14a85d614b300b`:
+258 + 1 + 300 + 70000 = 70559 (`9f1301`, little-endian), key
+`db31bdde6530514479a6a921f92327794b8bd1d7f61173ade7706d0d9f130152`:
 
 ```
 a8                                     ; map(8): keys 0-4, 7, 8, 9
-  00 5820 2001bbe6a9f5a0146a1f4d0381e9b0ed1ac2f1a979ce9d5ad84e46ff0b58f36b   ; 0: tree
+  00 5820 6bf3580bff464ed85a9dce79a9f1c21aedb0e981034d1f6a14a0f5a9e6bb0120   ; 0: tree
   01 81                                ; 1: parents, array(1)
-     5820 5074d980bd63330e7b37ddd0989bea896cd6a35988e973dfc4b1b28808930a7c
+     5820 8f2a0d816398cc068c636a2859d576a0706ee8e33cd4673e14e81ac87de97450
   02 a4                                ; 2: author, as above
      00 63 416e6e
      01 6f 616e6e406578616d706c652e636f6d
@@ -265,8 +265,8 @@ a8                                     ; map(8): keys 0-4, 7, 8, 9
   04 69 636f6e666c6963740a             ; 4: "conflict\n"
   07 50 000102030405060708090a0b0c0d0e0f    ; 7: change_id, bytes(16)
   08 82                                ; 8: conflict_terms, array(2): remove, add
-     5820 21012c1111111111111111111111111111111111111111111111111111111111
-     5820 3201117022222222222222222222222222222222222222222222222222222222
+     5820 11111111111111111111111111111111111111111111111111111111112c0121
+     5820 2222222222222222222222222222222222222222222222222222222270110132
   09 83                                ; 9: conflict_labels, array(3)
      64 6f757273                       ;    "ours"
      60                                ;    ""

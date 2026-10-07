@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/packstore"
+	"github.com/draganm/rebma/packstore"
 )
 
 const childDirEnv = "GC_TEST_CHILD_DIR"

@@ -13,8 +13,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 // ErrUnknownSegment reports an id that names no sealed segment (never
@@ -108,8 +108,8 @@ func (s *Store) pinSegment(id uint64) (*sealedSegment, error) {
 	return nil, ErrUnknownSegment
 }
 
-// ScanIndex walks segment id's footer index in index order (fanout on the
-// key's last byte, then full key), calling fn with each entry's key, record
+// ScanIndex walks segment id's footer index in index order (ascending key,
+// which the first-byte fanout buckets), calling fn with each entry's key, record
 // offset and stored payload length. No pack body is read.
 func (s *Store) ScanIndex(id uint64, fn func(k key.Key, off uint64, slen uint32)) error {
 	seg, err := s.pinSegment(id)

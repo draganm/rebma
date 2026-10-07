@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/amber-store/core/chunkers"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/chunkers"
+	"github.com/draganm/rebma/key"
 )
 
 func TestDir_EmptyDirIsSingleEmptyLeaf(t *testing.T) {

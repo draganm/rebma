@@ -7,7 +7,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -155,7 +155,7 @@ func (s *Store) runWriter(ctx context.Context, ch <-chan Object, seen *seenSet, 
 	}
 }
 
-// seenSet is a concurrency-safe set of keys, sharded on the key's last byte
+// seenSet is a concurrency-safe set of keys, sharded on the key's first byte
 // (uniformly distributed) to spread lock contention across writers.
 type seenSet struct {
 	shards [256]seenShard
@@ -176,7 +176,7 @@ func newSeenSet() *seenSet {
 
 // addIfAbsent records k and reports true if it was not already present.
 func (s *seenSet) addIfAbsent(k key.Key) bool {
-	sh := &s.shards[k[key.Size-1]]
+	sh := &s.shards[k[0]]
 	sh.mu.Lock()
 	defer sh.mu.Unlock()
 	if _, ok := sh.m[k]; ok {

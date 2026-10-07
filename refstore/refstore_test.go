@@ -6,7 +6,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/refstore"
 )
 
 func open(t *testing.T, dir string) *refstore.Store {

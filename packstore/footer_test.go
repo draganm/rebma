@@ -13,8 +13,8 @@ import (
 	"testing"
 
 	"github.com/FastFilter/xorfilter"
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 // testEntries builds n index entries with distinct keys and synthetic offsets.
@@ -67,11 +67,11 @@ func TestIndexSectionAbsentKey(t *testing.T) {
 }
 
 func TestIndexSectionSingleEntryAndEdgeBuckets(t *testing.T) {
-	// Force last bytes 0x00 and 0xFF to cover the b==0 lower bound and the
+	// Force first bytes 0x00 and 0xFF to cover the b==0 lower bound and the
 	// final bucket.
-	for _, last := range []byte{0x00, 0xFF, 0x80} {
+	for _, first := range []byte{0x00, 0xFF, 0x80} {
 		e := testEntries(t, 1)[0]
-		e.k[31] = last
+		e.k[0] = first
 		idx := buildIndexSection([]indexEntry{e})
 		fanout, entryBytes, err := parseIndexSection(idx, 1)
 		if err != nil {
@@ -79,12 +79,12 @@ func TestIndexSectionSingleEntryAndEdgeBuckets(t *testing.T) {
 		}
 		off, slen, ok := searchIndex(fanout, entryBytes, e.k)
 		if !ok || off != e.off || slen != e.slen {
-			t.Fatalf("last=%#x: ok=%v off=%d slen=%d", last, ok, off, slen)
+			t.Fatalf("first=%#x: ok=%v off=%d slen=%d", first, ok, off, slen)
 		}
 		miss := e.k
 		miss[30] ^= 0xFF
 		if _, _, ok := searchIndex(fanout, entryBytes, miss); ok {
-			t.Fatalf("last=%#x: absent key found", last)
+			t.Fatalf("first=%#x: absent key found", first)
 		}
 	}
 }
@@ -158,17 +158,17 @@ func TestIndexSectionEmptyAndEmptyBucket(t *testing.T) {
 		t.Fatal("found key in empty index")
 	}
 
-	// Deterministic empty-bucket miss: one entry with last byte 0x10,
-	// search a key with last byte 0x20 (a guaranteed-empty bucket).
+	// Deterministic empty-bucket miss: one entry with first byte 0x10,
+	// search a key with first byte 0x20 (a guaranteed-empty bucket).
 	e := testEntries(t, 1)[0]
-	e.k[31] = 0x10
+	e.k[0] = 0x10
 	idx = buildIndexSection([]indexEntry{e})
 	fanout, entryBytes, err = parseIndexSection(idx, 1)
 	if err != nil {
 		t.Fatal(err)
 	}
 	probe := e.k
-	probe[31] = 0x20
+	probe[0] = 0x20
 	if _, _, ok := searchIndex(fanout, entryBytes, probe); ok {
 		t.Fatal("found key in empty bucket")
 	}
@@ -214,10 +214,10 @@ func TestFilterSectionFalsePositiveRate(t *testing.T) {
 	}
 }
 
-func TestFilterSectionDuplicateTails(t *testing.T) {
-	// Two entries with an identical 8-byte tail must not break the build.
+func TestFilterSectionDuplicateHeads(t *testing.T) {
+	// Two entries with an identical 8-byte head must not break the build.
 	entries := testEntries(t, 2)
-	copy(entries[1].k[24:32], entries[0].k[24:32])
+	copy(entries[1].k[:8], entries[0].k[:8])
 	sec, err := buildFilterSection(entries)
 	if err != nil {
 		t.Fatal(err)
@@ -227,7 +227,7 @@ func TestFilterSectionDuplicateTails(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !f.Contains(filterKey(entries[0].k)) || !f.Contains(filterKey(entries[1].k)) {
-		t.Fatal("false negative on duplicate tails")
+		t.Fatal("false negative on duplicate heads")
 	}
 }
 
@@ -259,12 +259,12 @@ func TestIndexSectionGoldenBytes(t *testing.T) {
 	// Pin the on-disk encoding against symmetric encode/decode bugs: two
 	// fixed entries, exact expected bytes.
 	var k1, k2 key.Key
-	k1[0] = 0x01 // Blob, 1-byte length field
-	k1[1] = 0x05 // length 5
-	k1[31] = 0x02
-	k2[0] = 0x01
-	k2[1] = 0x07
-	k2[31] = 0x01 // sorts before k1 (last byte)
+	k1[31] = 0x00 // Blob, 1-byte length field
+	k1[30] = 0x05 // length 5
+	k1[0] = 0x02
+	k2[31] = 0x00
+	k2[30] = 0x07
+	k2[0] = 0x01 // sorts before k1 (first byte)
 	idx := buildIndexSection([]indexEntry{
 		{k: k1, off: 0x1122334455667788, slen: 0xAABBCCDD},
 		{k: k2, off: 8, slen: 1},
@@ -284,7 +284,7 @@ func TestIndexSectionGoldenBytes(t *testing.T) {
 		t.Fatalf("fanout[255] = %d", got)
 	}
 
-	// First entry must be k2 (last byte 0x01): key bytes, then off/slen BE.
+	// First entry must be k2 (first byte 0x01): key bytes, then off/slen BE.
 	e0 := idx[fanoutSize : fanoutSize+indexEntrySize]
 	if !bytes.Equal(e0[:32], k2[:]) {
 		t.Fatalf("entry 0 key = %x", e0[:32])
@@ -358,13 +358,13 @@ func TestParseFilterSectionRejectsBadGeometry(t *testing.T) {
 
 func TestFilterSectionFieldRoundTrip(t *testing.T) {
 	entries := testEntries(t, 1234)
-	tails := make([]uint64, 0, len(entries))
+	heads := make([]uint64, 0, len(entries))
 	for _, e := range entries {
-		tails = append(tails, filterKey(e.k))
+		heads = append(heads, filterKey(e.k))
 	}
-	slices.Sort(tails)
-	tails = slices.Compact(tails)
-	want, err := xorfilter.NewBinaryFuse[uint16](tails)
+	slices.Sort(heads)
+	heads = slices.Compact(heads)
+	want, err := xorfilter.NewBinaryFuse[uint16](heads)
 	if err != nil {
 		t.Fatal(err)
 	}

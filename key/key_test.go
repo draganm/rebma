@@ -2,8 +2,10 @@ package key
 
 import (
 	"bytes"
+	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"slices"
 	"testing"
 
 	"github.com/zeebo/blake3"
@@ -12,9 +14,9 @@ import (
 func TestAccessors_SingleByteLength(t *testing.T) {
 	// Blob, length 255 (lengthSize 1), 30-byte hash.
 	var k Key
-	k[0] = 0x00 // type 0, reserved 0, lengthSize-1 = 0
-	k[1] = 0xFF // length = 255
-	for i := 2; i < Size; i++ {
+	k[31] = 0x00 // type 0, reserved 0, lengthSize-1 = 0
+	k[30] = 0xFF // length = 255
+	for i := 0; i < 30; i++ {
 		k[i] = byte(i)
 	}
 	if k.Type() != Blob {
@@ -29,16 +31,19 @@ func TestAccessors_SingleByteLength(t *testing.T) {
 	if len(k.Hash()) != 30 {
 		t.Errorf("len(Hash()) = %d, want 30", len(k.Hash()))
 	}
-	if !bytes.Equal(k.Hash(), k[2:]) {
-		t.Errorf("Hash() = %x, want %x", k.Hash(), k[2:])
+	// The key holds the hash reversed; Hash() hands it back in digest order.
+	want := slices.Clone(k[:30])
+	slices.Reverse(want)
+	if !bytes.Equal(k.Hash(), want) {
+		t.Errorf("Hash() = %x, want %x", k.Hash(), want)
 	}
 }
 
 func TestAccessors_MultiByteLength(t *testing.T) {
 	// FileNode, length 65536 (lengthSize 3): header = (1<<4) | (3-1) = 0x12.
 	var k Key
-	k[0] = 0x12
-	k[1], k[2], k[3] = 0x01, 0x00, 0x00 // 0x010000 = 65536
+	k[31] = 0x12
+	k[28], k[29], k[30] = 0x00, 0x00, 0x01 // little-endian 0x010000 = 65536
 	if k.Type() != FileNode {
 		t.Errorf("Type() = %v, want FileNode", k.Type())
 	}
@@ -207,7 +212,7 @@ func TestParse_BadLength(t *testing.T) {
 func TestValidate_ReservedBit(t *testing.T) {
 	var full [32]byte
 	k, _ := NewFromHash(Blob, 1, full)
-	k[0] |= 0x08 // set the reserved bit
+	k[31] |= 0x08 // set the reserved bit
 	if err := k.Validate(); !errors.Is(err, ErrReservedBitSet) {
 		t.Errorf("err = %v, want ErrReservedBitSet", err)
 	}
@@ -215,19 +220,20 @@ func TestValidate_ReservedBit(t *testing.T) {
 
 func TestValidate_ReservedType(t *testing.T) {
 	var k Key
-	k[0] = 6 << 4 // type 6, lengthSize 1
-	k[1] = 0x01
+	k[31] = 6 << 4 // type 6, lengthSize 1
+	k[30] = 0x01
 	if err := k.Validate(); !errors.Is(err, ErrReservedType) {
 		t.Errorf("err = %v, want ErrReservedType", err)
 	}
 }
 
 func TestValidate_NonCanonicalLength(t *testing.T) {
-	// Blob, lengthSize 2 (header low bits = 1), length bytes 0x00 0x05:
-	// leading zero with a non-zero value -> non-canonical.
+	// Blob, lengthSize 2 (header low bits = 1), length bytes 0x05 0x00
+	// (little-endian): a zero most-significant byte with a non-zero value ->
+	// non-canonical.
 	var k Key
-	k[0] = 0x01
-	k[1], k[2] = 0x00, 0x05
+	k[31] = 0x01
+	k[29], k[30] = 0x05, 0x00
 	if err := k.Validate(); !errors.Is(err, ErrNonCanonicalLength) {
 		t.Errorf("err = %v, want ErrNonCanonicalLength", err)
 	}
@@ -243,8 +249,8 @@ func TestValidate_ZeroLengthIsCanonical(t *testing.T) {
 
 func TestString_Hex(t *testing.T) {
 	var k Key
-	k[0] = 0x12
-	k[31] = 0xFF
+	k[0] = 0xFF
+	k[31] = 0x12
 	got := k.String()
 	if want := hex.EncodeToString(k[:]); got != want {
 		t.Errorf("String() = %s, want %s", got, want)
@@ -260,13 +266,64 @@ func TestNewFromHash_Commit(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if k[0] != 0x50 {
-		t.Errorf("header byte = %#x, want 0x50 (type 5, one length byte)", k[0])
+	if k[31] != 0x50 {
+		t.Errorf("header byte = %#x, want 0x50 (type 5, one length byte)", k[31])
 	}
 	if k.Type() != Commit || k.Length() != 100 {
 		t.Errorf("Type() = %v, Length() = %d; want Commit, 100", k.Type(), k.Length())
 	}
 	if err := k.Validate(); err != nil {
 		t.Errorf("Validate: %v", err)
+	}
+}
+
+// amberKey assembles the Amber-Store layout this package reverses: header
+// byte, big-endian payload length, then the leading bytes of the digest.
+func amberKey(t Type, length uint64, full [Size]byte) [Size]byte {
+	ls := lengthSizeFor(length)
+	var a [Size]byte
+	a[0] = byte(t)<<4 | byte(ls-1)
+	var buf [8]byte
+	binary.BigEndian.PutUint64(buf[:], length)
+	copy(a[1:1+ls], buf[8-ls:])
+	copy(a[1+ls:], full[:Size-1-ls])
+	return a
+}
+
+func TestNewFromHash_IsReversedAmberKey(t *testing.T) {
+	full := blake3.Sum256([]byte("rebma"))
+	lengths := []uint64{0, 1, 255, 256, 65536, 1<<24 - 1, 1 << 32, 1 << 40, 1 << 48, 1 << 56, 1<<64 - 1}
+	for _, ty := range []Type{Blob, FileNode, DirLeaf, DirNode, XattrSet, Commit} {
+		for _, length := range lengths {
+			k, err := NewFromHash(ty, length, full)
+			if err != nil {
+				t.Fatalf("%v, length %d: %v", ty, length, err)
+			}
+			want := amberKey(ty, length, full)
+			slices.Reverse(want[:])
+			if k != Key(want) {
+				t.Errorf("%v, length %d: key = %x, want %x", ty, length, k[:], want[:])
+			}
+			if err := k.Validate(); err != nil {
+				t.Errorf("%v, length %d: Validate: %v", ty, length, err)
+			}
+		}
+	}
+}
+
+func TestNewFromHash_KnownLayout(t *testing.T) {
+	var full [32]byte
+	for i := range full {
+		full[i] = byte(i + 1)
+	}
+	// DirNode (3), length 1000 = 0x03e8 (lengthSize 2): 29 digest bytes
+	// reversed, the length little-endian, the header byte last.
+	k, err := NewFromHash(DirNode, 1000, full)
+	if err != nil {
+		t.Fatal(err)
+	}
+	const want = "1d1c1b1a191817161514131211100f0e0d0c0b0a090807060504030201" + "e803" + "31"
+	if got := k.String(); got != want {
+		t.Errorf("key = %s, want %s", got, want)
 	}
 }

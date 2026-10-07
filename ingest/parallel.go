@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/amber-store/core/amberignore"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberignore"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 // pbuilder builds the CAS tree concurrently. It reuses the driver's per-entry

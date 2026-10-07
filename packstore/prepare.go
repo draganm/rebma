@@ -3,7 +3,7 @@ package packstore
 import (
 	"fmt"
 
-	"github.com/amber-store/core/amberpack"
+	"github.com/draganm/rebma/amberpack"
 )
 
 // prepare returns the record to append for obj and the payload length the

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/amber-store/core/chunkers"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/chunkers"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 // memStore is an in-memory object store for builder-emitted objects.

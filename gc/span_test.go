@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/reference"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/reference"
 )
 
 // Status reads the references, which every process sees at once, and marks

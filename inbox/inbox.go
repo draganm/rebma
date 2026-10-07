@@ -11,9 +11,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/packstore"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/packstore"
 	"github.com/zeebo/blake3"
 )
 

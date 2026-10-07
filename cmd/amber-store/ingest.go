@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/amber-store/core/ingest"
-	"github.com/amber-store/core/reference"
+	"github.com/draganm/rebma/ingest"
+	"github.com/draganm/rebma/reference"
 	"github.com/urfave/cli/v2"
 )
 

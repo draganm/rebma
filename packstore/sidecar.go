@@ -6,8 +6,8 @@ import (
 	"hash/crc32"
 	"os"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 // An active segment's index lives in its owner's memory. The sidecar,

@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/amberignore"
-	"github.com/amber-store/core/chunkers"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberignore"
+	"github.com/draganm/rebma/chunkers"
+	"github.com/draganm/rebma/key"
 	"golang.org/x/sys/unix"
 )
 

@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/packstore"
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/packstore"
+	"github.com/draganm/rebma/refstore"
 )
 
 // Two store/refstore/collector triples on one directory stand in for two

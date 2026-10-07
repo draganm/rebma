@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/amber-store/core/refstore/internal/refsdb"
+	"github.com/draganm/rebma/refstore/internal/refsdb"
 )
 
 // ErrNotFound is returned by Get, Delete and the compare forms for an absent name.

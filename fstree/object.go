@@ -9,7 +9,7 @@
 // take a commit for the directory it records (dirof.go).
 package fstree
 
-import "github.com/amber-store/core/key"
+import "github.com/draganm/rebma/key"
 
 // Object is a built CAS object: its key and its serialized bytes.
 type Object struct {

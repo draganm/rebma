@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/key"
 )
 
 // sealedStore builds a store with sealed segments and returns its dir.

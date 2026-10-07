@@ -3,9 +3,9 @@ package fstree_test
 import (
 	"testing"
 
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 // storing returns a function that puts a built object into store, and one

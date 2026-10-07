@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"unicode/utf8"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 	"github.com/fxamacker/cbor/v2"
 )
 

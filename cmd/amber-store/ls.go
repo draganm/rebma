@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/sys/unix"
 )

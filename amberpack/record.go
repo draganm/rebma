@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"hash/crc32"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 	"github.com/klauspost/compress/zstd"
 )
 

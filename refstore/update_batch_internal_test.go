@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/reference"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/reference"
 )
 
 // A batch that fails after some of its changes ran leaves none of them

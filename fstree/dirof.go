@@ -3,8 +3,8 @@ package fstree
 import (
 	"fmt"
 
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/key"
 )
 
 // A Commit key may stand where a directory's key is expected: as the key

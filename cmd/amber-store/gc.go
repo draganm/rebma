@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/amber-store/core/gc"
+	"github.com/draganm/rebma/gc"
 	"github.com/urfave/cli/v2"
 )
 

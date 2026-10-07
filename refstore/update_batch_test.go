@@ -6,8 +6,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/refstore"
 )
 
 // recordAt is the stored form of a reference called name pointing at k.

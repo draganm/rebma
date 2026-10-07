@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 // commitObj builds a commit of tree with the given parents.

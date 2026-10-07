@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 )
 
 // A lookup that finds nothing lists the directory. While Compact or Remove

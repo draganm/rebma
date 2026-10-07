@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 func openStore(t *testing.T, dir string, opts ...Option) *Store {

@@ -2,7 +2,6 @@ package packstore
 
 import (
 	"bytes"
-	"cmp"
 	"encoding/binary"
 	"fmt"
 	"hash/crc32"
@@ -12,13 +11,13 @@ import (
 	"sort"
 
 	"github.com/FastFilter/xorfilter"
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 	"golang.org/x/sys/unix"
 )
 
 const (
-	fanoutSize     = 256 * 4 // 256 cumulative u32 counts on the key's last byte
+	fanoutSize     = 256 * 4 // 256 cumulative u32 counts on the key's first byte
 	indexEntrySize = 32 + 8 + 4
 	trailerSize    = 64
 )
@@ -32,13 +31,10 @@ type indexEntry struct {
 	slen uint32
 }
 
-// compareEntries orders by (last key byte, full key): the fanout is on the
-// last byte because byte 0 is type/length-size and clusters, while the hash
-// tail is uniformly distributed.
+// compareEntries orders by full key. The fanout is on the first byte, so its
+// buckets are runs of this order: a key leads with its hash, which is
+// uniformly distributed, while the last byte is type/length-size and clusters.
 func compareEntries(a, b indexEntry) int {
-	if c := cmp.Compare(a.k[key.Size-1], b.k[key.Size-1]); c != 0 {
-		return c
-	}
 	return bytes.Compare(a.k[:], b.k[:])
 }
 
@@ -53,7 +49,7 @@ func buildIndexSection(entries []indexEntry) []byte {
 	out := make([]byte, fanoutSize+len(es)*indexEntrySize)
 	var counts [256]uint32
 	for _, e := range es {
-		counts[e.k[key.Size-1]]++
+		counts[e.k[0]]++
 	}
 	cum := uint32(0)
 	for b := 0; b < 256; b++ {
@@ -100,22 +96,22 @@ const (
 	filterTypeBinaryFuse16 = 1
 )
 
-// filterKey is the filter input for k: the last 8 bytes of the key, which lie
+// filterKey is the filter input for k: the first 8 bytes of the key, which lie
 // in the uniformly distributed truncated-hash region.
 func filterKey(k key.Key) uint64 {
-	return binary.BigEndian.Uint64(k[key.Size-8:])
+	return binary.BigEndian.Uint64(k[:8])
 }
 
 // buildFilterSection builds and serializes a binary fuse filter over the
-// entries' keys. Duplicate 8-byte tails are deduplicated before the build.
+// entries' keys. Duplicate 8-byte heads are deduplicated before the build.
 func buildFilterSection(entries []indexEntry) ([]byte, error) {
-	tails := make([]uint64, 0, len(entries))
+	heads := make([]uint64, 0, len(entries))
 	for _, e := range entries {
-		tails = append(tails, filterKey(e.k))
+		heads = append(heads, filterKey(e.k))
 	}
-	slices.Sort(tails)
-	tails = slices.Compact(tails)
-	f, err := xorfilter.NewBinaryFuse[uint16](tails)
+	slices.Sort(heads)
+	heads = slices.Compact(heads)
+	f, err := xorfilter.NewBinaryFuse[uint16](heads)
 	if err != nil {
 		return nil, fmt.Errorf("packstore: building fuse filter: %w", err)
 	}
@@ -176,7 +172,7 @@ func parseFilterSection(b []byte) (*xorfilter.BinaryFuse[uint16], error) {
 	return f, nil
 }
 
-// searchIndex finds k in a parsed index section: fanout bucket on the last
+// searchIndex finds k in a parsed index section: fanout bucket on the first
 // byte, then binary search on the full key within the bucket.
 func searchIndex(fanout *[256]uint32, entries []byte, k key.Key) (off uint64, slen uint32, ok bool) {
 	pos, ok := searchIndexPos(fanout, entries, k)
@@ -189,7 +185,7 @@ func searchIndex(fanout *[256]uint32, entries []byte, k key.Key) (off uint64, sl
 
 // searchIndexPos returns k's entry position within the index section.
 func searchIndexPos(fanout *[256]uint32, entries []byte, k key.Key) (pos int, ok bool) {
-	b := k[key.Size-1]
+	b := k[0]
 	lo := uint32(0)
 	if b > 0 {
 		lo = fanout[b-1]

@@ -1,4 +1,8 @@
-# amber-store-core — project notes
+# rebma — project notes
+
+rebma is amber-store/core with reversed key bytes (`architecture/keys.md`):
+hash first, header byte last. Package, command and file-format names are
+kept from amber-store/core.
 
 ## Dev environment
 

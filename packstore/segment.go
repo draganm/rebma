@@ -1,6 +1,6 @@
 // Package packstore persists Amber-Store CAS objects in log-structured,
 // append-only segment (pack) files. Sealed segments are immutable, mmap'd
-// whole, and self-indexed by a footer (fanout index on the last key byte +
+// whole, and self-indexed by a footer (fanout index on the first key byte +
 // binary fuse filter + fixed trailer). An active segment is indexed in its
 // owner's memory and, for everybody else and for the next open, by a sidecar
 // file beside it (sidecar.go). There is no global index. A directory may be
@@ -15,8 +15,8 @@ package packstore
 import (
 	"hash/crc32"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 const (

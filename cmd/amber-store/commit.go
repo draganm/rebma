@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/packstore"
-	"github.com/amber-store/core/reference"
-	"github.com/amber-store/core/refstore"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/packstore"
+	"github.com/draganm/rebma/reference"
+	"github.com/draganm/rebma/refstore"
 	"github.com/urfave/cli/v2"
 )
 

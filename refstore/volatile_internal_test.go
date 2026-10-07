@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/refstore/internal/refsdb"
+	"github.com/draganm/rebma/refstore/internal/refsdb"
 )
 
 // driverConn returns the driver's connection behind conn, which identifies it

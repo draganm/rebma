@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/amber-store/core/amberpack"
+	"github.com/draganm/rebma/amberpack"
 )
 
 // onlyActive returns the path of the directory's single active segment.

@@ -1,4 +1,13 @@
-# Amber-Store Core
+# rebma
+
+**rebma** is [Amber-Store Core](https://github.com/amber-store/core) with the
+bytes of every key **reversed**: a key leads with its truncated hash and ends
+with the type/length header ([`architecture/keys.md`](architecture/keys.md)).
+The Go API, the CLI and the object encodings are otherwise Amber-Store Core's;
+only the module path (`github.com/draganm/rebma`) differs. Because the keys
+differ, so does everything derived from them — root keys, pack streams and
+store directories are **not interchangeable** with Amber-Store's, and a store
+directory must only ever be opened by one of the two.
 
 A content-addressable store for **filesystem trees** — arbitrarily deep
 directories and files, where file content is split by content-defined chunking and
@@ -52,8 +61,9 @@ store:
 
 ## Encoding
 
-- **Keys** are 32 bytes: a type/length header plus a truncated
-  [BLAKE3](https://github.com/BLAKE3-team/BLAKE3) hash of the content.
+- **Keys** are 32 bytes: a truncated
+  [BLAKE3](https://github.com/BLAKE3-team/BLAKE3) hash of the content, then a
+  length and a type/length header — an Amber-Store key, byte-reversed.
 - **Structured objects** use **deterministic CBOR**
   ([RFC 8949 §4.2](https://www.rfc-editor.org/rfc/rfc8949#name-deterministically-encoded-c));
   `Blob`s are raw bytes. Deterministic encoding is required because the key's hash
@@ -147,7 +157,7 @@ root. `--no-ignore` disables all ignore processing.
 
 | Document | Contents |
 |----------|----------|
-| [`architecture/keys.md`](architecture/keys.md)   | The 32-byte lookup key: header byte, payload length, truncated hash. |
+| [`architecture/keys.md`](architecture/keys.md)   | The 32-byte lookup key: truncated hash, payload length, header byte. |
 | [`architecture/types.md`](architecture/types.md) | The type model: object types, filesystem entry types, length-field semantics. |
 | [`architecture/fstree.md`](architecture/fstree.md) | On-the-wire CBOR layout of every type, the chunkers, tree construction, and read paths. |
 | [`architecture/amberpack.md`](architecture/amberpack.md) | The flat pack stream: record framing, CRCs, recovery. |
@@ -166,7 +176,7 @@ go build ./...
 go test ./...
 ```
 
-- Module: `github.com/amber-store/core`
+- Module: `github.com/draganm/rebma`
 - Go: 1.26+
 
 ## License

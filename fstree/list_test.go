@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
 )
 
 func TestListEntries_PagesMatchCollect(t *testing.T) {

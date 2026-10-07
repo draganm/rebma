@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/key"
 	"golang.org/x/sys/unix"
 )
 

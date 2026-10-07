@@ -14,11 +14,11 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/amber-store/core/amberignore"
-	"github.com/amber-store/core/chunkers"
-	"github.com/amber-store/core/fstree"
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/packstore"
+	"github.com/draganm/rebma/amberignore"
+	"github.com/draganm/rebma/chunkers"
+	"github.com/draganm/rebma/fstree"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/packstore"
 )
 
 // DefaultItemBits is the item-chunker bit width used when Opts leaves it zero:

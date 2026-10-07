@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/amberpack"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/amberpack"
+	"github.com/draganm/rebma/key"
 )
 
 func repairStore(t *testing.T, opts ...Option) *Store {

@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/key"
 )
 
 func TestParseIdentity(t *testing.T) {

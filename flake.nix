@@ -1,5 +1,5 @@
 {
-  description = "github.com/amber-store/core";
+  description = "github.com/draganm/rebma";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 

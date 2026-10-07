@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/amber-store/core/commit"
-	"github.com/amber-store/core/key"
+	"github.com/draganm/rebma/commit"
+	"github.com/draganm/rebma/key"
 )
 
 const (
@@ -220,7 +220,7 @@ func TestEncodeRejectsInvalid(t *testing.T) {
 	cases := map[string]func(*commit.Commit){
 		"zero tree":             func(c *commit.Commit) { c.Tree = key.Key{} },
 		"file tree":             func(c *commit.Commit) { c.Tree = fileNode },
-		"non-canonical tree":    func(c *commit.Commit) { c.Tree[0] |= 0x08 },
+		"non-canonical tree":    func(c *commit.Commit) { c.Tree[31] |= 0x08 },
 		"parent not a commit":   func(c *commit.Commit) { c.Parents[0] = c.Tree },
 		"duplicate parents":     func(c *commit.Commit) { c.Parents[1] = c.Parents[0] },
 		"too many parents":      func(c *commit.Commit) { c.Parents = commitKeys(t, commit.MaxParents+1) },
@@ -306,10 +306,10 @@ func TestDecodeRejects(t *testing.T) {
 // committer Bob, message "merge\n". A key's length field is the commit's own
 // bytes plus its tree's length: 115+1 for the parents, 174+1 for the merge.
 const (
-	goldenParentA = "5074d980bd63330e7b37ddd0989bea896cd6a35988e973dfc4b1b28808930a7c"
-	goldenParentB = "5074c8825d499d27183b57319a8b637c7868ef9783da1d19369231d0bbe48831"
-	goldenBytes   = "a50058202001bbe6a9f5a0146a1f4d0381e9b0ed1ac2f1a979ce9d5ad84e46ff0b58f36b018258205074d980bd63330e7b37ddd0989bea896cd6a35988e973dfc4b1b28808930a7c58205074c8825d499d27183b57319a8b637c7868ef9783da1d19369231d0bbe4883102a40063416e6e016f616e6e406578616d706c652e636f6d021b17979cfe362a000003187803a40063426f620160021b17979cfe362a00010339012b04666d657267650a"
-	goldenKey     = "50afd48693e2ae8418fb83d0459174df45ba5fdddef67376e74ac6893a5abbed"
+	goldenParentA = "8f2a0d816398cc068c636a2859d576a0706ee8e33cd4673e14e81ac87de97450"
+	goldenParentB = "68e165549a26b82280724ed57cdf1f8e7e2390a3b37a8ba9a17cd44becbc7450"
+	goldenBytes   = "a50058206bf3580bff464ed85a9dce79a9f1c21aedb0e981034d1f6a14a0f5a9e6bb0120018258208f2a0d816398cc068c636a2859d576a0706ee8e33cd4673e14e81ac87de97450582068e165549a26b82280724ed57cdf1f8e7e2390a3b37a8ba9a17cd44becbc745002a40063416e6e016f616e6e406578616d706c652e636f6d021b17979cfe362a000003187803a40063426f620160021b17979cfe362a00010339012b04666d657267650a"
+	goldenKey     = "0bfeb34dc3a09fb16c88cd479a7f931a223b73f3836e81c0f9f601c720acaf50"
 )
 
 func TestGoldenVector(t *testing.T) {
@@ -466,7 +466,7 @@ func TestEncodeRejectsInvalidJJFields(t *testing.T) {
 		"too many terms":        func(c *commit.Commit) { c.ConflictTerms, c.ConflictLabels = tooMany, nil },
 		"term is a blob":        func(c *commit.Commit) { c.ConflictTerms[0] = blob },
 		"term is a commit":      func(c *commit.Commit) { c.ConflictTerms[1] = ka },
-		"non-canonical term":    func(c *commit.Commit) { c.ConflictTerms[0][0] |= 0x08 },
+		"non-canonical term":    func(c *commit.Commit) { c.ConflictTerms[0][31] |= 0x08 },
 		"labels without terms":  func(c *commit.Commit) { c.ConflictTerms = nil },
 		"one label, no terms":   func(c *commit.Commit) { c.ConflictTerms, c.ConflictLabels = nil, []string{"ours"} }, // the count is right: only the rule against labels on a resolved tree rejects it
 		"a label too few":       func(c *commit.Commit) { c.ConflictLabels = c.ConflictLabels[:2] },
@@ -579,8 +579,8 @@ func TestObjectRejectsLengthOverflow(t *testing.T) {
 // name, bot@example.com, at Bob's time and zone; message "conflict\n".
 // 258 bytes; length field 258+1+300+70000 = 70559.
 const (
-	goldenConflictedBytes = "a80058202001bbe6a9f5a0146a1f4d0381e9b0ed1ac2f1a979ce9d5ad84e46ff0b58f36b018158205074d980bd63330e7b37ddd0989bea896cd6a35988e973dfc4b1b28808930a7c02a40063416e6e016f616e6e406578616d706c652e636f6d021b17979cfe362a000003187803a40060016f626f74406578616d706c652e636f6d021b17979cfe362a00010339012b0469636f6e666c6963740a0750000102030405060708090a0b0c0d0e0f0882582021012c1111111111111111111111111111111111111111111111111111111111582032011170222222222222222222222222222222222222222222222222222222220983646f7572736066746865697273"
-	goldenConflictedKey   = "5201139f190aa234ad713392987671d47e7e3292a613c62e3d14a85d614b300b"
+	goldenConflictedBytes = "a80058206bf3580bff464ed85a9dce79a9f1c21aedb0e981034d1f6a14a0f5a9e6bb0120018158208f2a0d816398cc068c636a2859d576a0706ee8e33cd4673e14e81ac87de9745002a40063416e6e016f616e6e406578616d706c652e636f6d021b17979cfe362a000003187803a40060016f626f74406578616d706c652e636f6d021b17979cfe362a00010339012b0469636f6e666c6963740a0750000102030405060708090a0b0c0d0e0f0882582011111111111111111111111111111111111111111111111111111111112c0121582022222222222222222222222222222222222222222222222222222222701101320983646f7572736066746865697273"
+	goldenConflictedKey   = "db31bdde6530514479a6a921f92327794b8bd1d7f61173ade7706d0d9f130152"
 )
 
 func TestGoldenVectorConflicted(t *testing.T) {

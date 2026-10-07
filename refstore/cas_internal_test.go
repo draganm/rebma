@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amber-store/core/key"
-	"github.com/amber-store/core/reference"
-	"github.com/amber-store/core/refstore/internal/refsdb"
+	"github.com/draganm/rebma/key"
+	"github.com/draganm/rebma/reference"
+	"github.com/draganm/rebma/refstore/internal/refsdb"
 )
 
 // A panic inside a write transaction must not leave SQLite's write lock held:
